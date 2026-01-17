@@ -1,0 +1,32 @@
+{
+  "name": "planeja-ai",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "format": "prettier --write .",
+    "check-types": "turbo check-types",
+    "test": "turbo test",
+    "test:backend": "npm run test -w @repo/backend",
+    "test:backend:e2e": "npm run test:e2e -w @repo/backend",
+    "db:generate": "npm run db:generate -w @repo/database",
+    "db:push": "npm run db:push -w @repo/database",
+    "db:migrate": "npm run db:migrate -w @repo/database",
+    "db:studio": "npm run db:studio -w @repo/database",
+    "db:seed": "npm run db:seed -w @repo/database"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3"
+  },
+  "packageManager": "npm@10.8.2",
+  "engines": {
+    "node": ">=20"
+  }
+}
