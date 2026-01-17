@@ -207,9 +207,7 @@ export class TransactionsService {
     return this.prisma.$transaction(async (tx) => {
       // Revert balance change
       const balanceChange =
-        transaction.type === 'INCOME'
-          ? -Number(transaction.value)
-          : Number(transaction.value);
+        transaction.type === 'INCOME' ? -Number(transaction.value) : Number(transaction.value);
 
       await tx.account.update({
         where: { id: transaction.accountId },
@@ -232,10 +230,7 @@ export class TransactionsService {
       select: { id: true, balance: true },
     });
 
-    const totalBalance = accounts.reduce(
-      (sum, acc) => sum + Number(acc.balance),
-      0
-    );
+    const totalBalance = accounts.reduce((sum, acc) => sum + Number(acc.balance), 0);
 
     const accountIds = accounts.map((a) => a.id);
 
@@ -258,7 +253,8 @@ export class TransactionsService {
     });
 
     const income = monthTransactions.find((t) => t.type === 'INCOME')?._sum.value || new Decimal(0);
-    const expense = monthTransactions.find((t) => t.type === 'EXPENSE')?._sum.value || new Decimal(0);
+    const expense =
+      monthTransactions.find((t) => t.type === 'EXPENSE')?._sum.value || new Decimal(0);
 
     return {
       totalBalance,

@@ -1,10 +1,4 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { ErrorResponse } from './err';
 
@@ -29,9 +23,10 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         const resp = exceptionResponse as Partial<ErrorResponse>;
         errorResponse = {
           statusCode: status,
-          details: resp.details || (resp as { message?: string }).message
-            ? [String((resp as { message?: string }).message)]
-            : [],
+          details:
+            resp.details || (resp as { message?: string }).message
+              ? [String((resp as { message?: string }).message)]
+              : [],
           fields: resp.fields || {},
         };
       } else {
@@ -44,9 +39,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     } else if (exception instanceof Error) {
       console.error('Unhandled error:', exception);
       errorResponse.details = [
-        process.env.NODE_ENV === 'development'
-          ? exception.message
-          : 'Erro interno do servidor'
+        process.env.NODE_ENV === 'development' ? exception.message : 'Erro interno do servidor',
       ];
     }
 

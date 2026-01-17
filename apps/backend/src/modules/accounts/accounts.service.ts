@@ -55,7 +55,7 @@ export class AccountsService {
       throw new SimpleErr('Conta não encontrada', HttpStatus.NOT_FOUND);
     }
 
-    const { wallet: _, ...accountWithoutWallet } = account;
+    const { wallet: _wallet, ...accountWithoutWallet } = account;
     return accountWithoutWallet;
   }
 

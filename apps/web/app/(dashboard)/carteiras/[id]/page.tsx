@@ -34,6 +34,7 @@ export default function WalletDetailsPage() {
 
   useEffect(() => {
     loadWallet();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
   async function handleCreateAccount(e: React.FormEvent<HTMLFormElement>) {
