@@ -18,10 +18,7 @@ export class AccountsController {
   }
 
   @Get('wallets/:walletId/accounts')
-  findAllByWallet(
-    @CurrentUser() user: JwtPayload,
-    @Param('walletId') walletId: string
-  ) {
+  findAllByWallet(@CurrentUser() user: JwtPayload, @Param('walletId') walletId: string) {
     return this.accountsService.findAllByWallet(user.userId, walletId);
   }
 

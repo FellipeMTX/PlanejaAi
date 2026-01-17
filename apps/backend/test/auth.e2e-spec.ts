@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { createTestApp, TestDatabaseManager } from './test-setup';
 import { PrismaService } from '../src/modules/shared/services/prisma.service';
 
@@ -79,13 +79,11 @@ describe('AuthController (e2e)', () => {
     const testPassword = 'password123';
 
     beforeAll(async () => {
-      await request(app.getHttpServer())
-        .post('/auth/signup')
-        .send({
-          name: 'Login Test User',
-          email: testEmail,
-          password: testPassword,
-        });
+      await request(app.getHttpServer()).post('/auth/signup').send({
+        name: 'Login Test User',
+        email: testEmail,
+        password: testPassword,
+      });
     });
 
     it('should return token for valid credentials', async () => {

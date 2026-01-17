@@ -8,10 +8,7 @@ export interface ErrorResponse {
 }
 
 export class SimpleErr extends HttpException {
-  constructor(
-    message: string,
-    status: HttpStatus = HttpStatus.BAD_REQUEST
-  ) {
+  constructor(message: string, status: HttpStatus = HttpStatus.BAD_REQUEST) {
     const response: ErrorResponse = {
       statusCode: status,
       details: [message],
@@ -22,10 +19,7 @@ export class SimpleErr extends HttpException {
 }
 
 export class FieldsErr extends HttpException {
-  constructor(
-    fields: Record<string, string[]>,
-    status: HttpStatus = HttpStatus.BAD_REQUEST
-  ) {
+  constructor(fields: Record<string, string[]>, status: HttpStatus = HttpStatus.BAD_REQUEST) {
     const response: ErrorResponse = {
       statusCode: status,
       details: [],

@@ -1,5 +1,5 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
-import { Decimal } from '@repo/database';
+import { Decimal, Prisma } from '@repo/database';
 import { PrismaService } from '../shared/services/prisma.service';
 import { AccountsService } from '../accounts/accounts.service';
 import { CategoriesService } from '../categories/categories.service';
@@ -36,7 +36,7 @@ export class TransactionsService {
     }
 
     // Create transaction and update balance atomically
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const transaction = await tx.transaction.create({
         data: {
           name,
@@ -76,7 +76,7 @@ export class TransactionsService {
       select: { id: true },
     });
 
-    const accountIds = accounts.map((a) => a.id);
+    const accountIds = accounts.map((a: { id: string }) => a.id);
 
     const where: Record<string, unknown> = {
       accountId: { in: accountIds },
@@ -155,7 +155,7 @@ export class TransactionsService {
       await this.categoriesService.validateOwnership(userId, categoryId);
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Revert old balance change
       const oldBalanceChange =
         existingTransaction.type === 'INCOME'
@@ -204,12 +204,10 @@ export class TransactionsService {
   async remove(userId: string, id: string) {
     const transaction = await this.findOne(userId, id);
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Revert balance change
       const balanceChange =
-        transaction.type === 'INCOME'
-          ? -Number(transaction.value)
-          : Number(transaction.value);
+        transaction.type === 'INCOME' ? -Number(transaction.value) : Number(transaction.value);
 
       await tx.account.update({
         where: { id: transaction.accountId },
@@ -232,12 +230,9 @@ export class TransactionsService {
       select: { id: true, balance: true },
     });
 
-    const totalBalance = accounts.reduce(
-      (sum, acc) => sum + Number(acc.balance),
-      0
-    );
+    const totalBalance = accounts.reduce((sum: number, acc: { id: string; balance: Decimal }) => sum + Number(acc.balance), 0);
 
-    const accountIds = accounts.map((a) => a.id);
+    const accountIds = accounts.map((a: { id: string; balance: Decimal }) => a.id);
 
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -257,8 +252,10 @@ export class TransactionsService {
       },
     });
 
-    const income = monthTransactions.find((t) => t.type === 'INCOME')?._sum.value || new Decimal(0);
-    const expense = monthTransactions.find((t) => t.type === 'EXPENSE')?._sum.value || new Decimal(0);
+    type TransactionGroup = { type: string; _sum: { value: Decimal | null } };
+    const income = monthTransactions.find((t: TransactionGroup) => t.type === 'INCOME')?._sum.value || new Decimal(0);
+    const expense =
+      monthTransactions.find((t: TransactionGroup) => t.type === 'EXPENSE')?._sum.value || new Decimal(0);
 
     return {
       totalBalance,

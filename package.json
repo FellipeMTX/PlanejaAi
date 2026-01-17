@@ -8,6 +8,8 @@
   ],
   "scripts": {
     "dev": "turbo dev",
+    "dev:backend": "npm run dev -w @repo/backend",
+    "dev:web": "npm run dev -w @repo/web",
     "build": "turbo build",
     "lint": "turbo lint",
     "format": "prettier --write .",
