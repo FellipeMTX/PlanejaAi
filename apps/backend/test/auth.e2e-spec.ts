@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { createTestApp, TestDatabaseManager } from './test-setup';
 import { PrismaService } from '../src/modules/shared/services/prisma.service';
 
